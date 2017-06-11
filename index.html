@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>home work 3</title>
+    <script src="https://d3js.org/d3.v3.min.js"></script> 
+    <style>
+        #hsvg1{
+            font-size: 16px;
+        }
+    </style>
+
+</head>
+<body>
+<div id="hwt01">1.製作長條圖，資料為2016年8月且台北市且發票數量大於10億張的項目</div>
+<div id="hsvg1"></div> 
+
+<script>
+
+   var svg1_w=900;//畫布寬
+   var svg1_h=500;//畫布高
+ 
+   var svg1=d3.select("#hsvg1").append("svg").attr({
+        "width":svg1_w,
+        "height":svg1_h,
+        "id":"svg1"
+    });
+    
+    
+d3.json("invoice-taipei.json", function(dataSet){
+           var svg_1_show = d3.select("#svg1");
+           var fDataSet = dataSet.filter(function(d){
+               return d.date==="2016/8/1"&&d.city==="臺北市"&&d.amount>"1000000000";
+           })
+           for(var i=0; i<fDataSet.length; i++){
+              svg_1_show.append("text").attr({
+                "x":15,
+                "y":15+((15+10)*i),        
+                "font-size":15,
+                "height":15,
+                "font-family":"arial",
+                "fill":"blue"        
+              }).text(fDataSet[i].industry);
+
+              svg_1_show.append("rect").attr({
+                  "x":300,
+                  "y":2+(15+10)*i, 
+                  "width":(fDataSet[i].amount)*0.000000005,
+                  "height":15,                  
+                  "fill":"red"
+              });
+
+              svg_1_show.append("text").attr({
+                "x":15+300+(fDataSet[i].amount)*0.000000005,
+                "y":15+((15+10)*i),        
+                "font-size":15,
+                "height":15,
+                "text-anchor":"start",  
+                "font-family":"arial",
+                "fill":"blue"        
+              }).text(fDataSet[i].amount);
+               
+               
+               
+               
+           }
+       });
+
+    
+    
+    
+    
+</script>
+
+<hr>
+
+</body>
+</html>
