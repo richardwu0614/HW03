@@ -17,8 +17,8 @@
 
 <script>
 
-   var svg1_w=900;//畫布寬
-   var svg1_h=500;//畫布高
+   var svg1_w=600;//畫布寬
+   var svg1_h=300;//畫布高
  
    var svg1=d3.select("#hsvg1").append("svg").attr({
         "width":svg1_w,
@@ -58,13 +58,12 @@ d3.json("invoice-taipei.json", function(dataSet){
                 "text-anchor":"start",  
                 "font-family":"arial",
                 "fill":"blue"        
-              }).text(fDataSet[i].amount);
-               
+              }).text(fDataSet[i].amount);  
                
                
                
            }
-       });
+});
 
     
     
