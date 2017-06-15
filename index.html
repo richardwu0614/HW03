@@ -127,6 +127,7 @@ d3.json("invoice-taipei.json", function(dataSet){
         
     }
 </script>
+<hr>
 <div id="hwt03">3.按鈕新增與移除</div>
 <div id="hsvg3"></div> 
       
@@ -242,16 +243,46 @@ d3.json("invoice-taipei.json", function(dataSet){
  
 
 <hr>
-<div id="hwt04">4.試著用ordinal()秀出各政黨顏色</div>
+<div id="hwt04">4.試著用ordinal()秀出各政黨顏色
+<br>["中國國民黨", "民主進步黨", "時代力量", "無黨團結聯盟", "親民黨"]
+<br>["blue","green","yellow","gray","orange"]
+</div>
 <div id="hsvg4"></div> 
 <script>
 var index=["中國國民黨", "民主進步黨", "時代力量", "無黨團結聯盟", "親民黨"];
-var color=["blue","green","yellow","gray","orange"];
-var xScale = d3.scale.ordinal()
+var color_hsvg4=["blue","green","yellow","gray","orange"];
+var xScale_hsvg4 = d3.scale.ordinal()
       .domain(index)
-      .range(color);
+      .range(color_hsvg4);
 
-console.log(xScale("無黨團結聯盟"));    
+console.log(xScale_hsvg4("無黨團結聯盟"));    
+bind_hsvg4(index);
+render_hsvg4();   
+    function bind_hsvg4(dataSet){
+        
+        var selection=d3.select("#hsvg4")
+        .selectAll("div")
+        .data(dataSet);
+        
+        selection.enter().append("div");
+        selection.exit().remove();
+        
+        
+    } 
+    
+function render_hsvg4(){
+        d3.selectAll("#hsvg4>div").text(function(d,i){
+            return (i+1)+":"+d;
+        }).style({
+          color:function(d){             
+              
+                 return xScale_hsvg4(d);   
+              
+          }  
+        });
+        
+    }    
+    
 </script>
 
 
