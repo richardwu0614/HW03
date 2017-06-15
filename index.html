@@ -26,52 +26,235 @@
         "id":"svg1"
     });
     
+
+var xScale=d3.scale.linear();
     
-d3.json("invoice-taipei.json", function(dataSet){
-           var svg_1_show = d3.select("#svg1");
+d3.json("invoice-taipei.json", function(dataSet){           
            var fDataSet = dataSet.filter(function(d){
                return d.date==="2016/8/1"&&d.city==="臺北市"&&d.amount>"1000000000";
            })
-           for(var i=0; i<fDataSet.length; i++){
-              svg_1_show.append("text").attr({
-                "x":15,
-                "y":15+((15+10)*i),        
-                "font-size":15,
-                "height":15,
-                "font-family":"arial",
-                "fill":"blue"        
-              }).text(fDataSet[i].industry);
 
-              svg_1_show.append("rect").attr({
-                  "x":300,
-                  "y":2+(15+10)*i, 
-                  "width":(fDataSet[i].amount)*0.000000005,
-                  "height":15,                  
-                  "fill":"red"
-              });
+     xScale.domain([
+            d3.min(fDataSet,function(d){
+            return d.amount;}),
+            d3.max(fDataSet,function(d){
+            return d.amount;})
+            ])
+        .range([10, 200]);   
 
-              svg_1_show.append("text").attr({
-                "x":15+300+(fDataSet[i].amount)*0.000000005,
-                "y":15+((15+10)*i),        
-                "font-size":15,
-                "height":15,
-                "text-anchor":"start",  
-                "font-family":"arial",
-                "fill":"blue"        
-              }).text(fDataSet[i].amount);  
-               
-               
-               
-           }
-});
+    bind(fDataSet);
+    render();
+ });
+    
+    function bind(dataSet){
+        var selection= d3.select("#svg1")
+            .selectAll("rect")
+            .data(dataSet);
+            selection.enter().append("rect");
+            selection.exit().remove();
 
+        var selection_text = d3.select("#svg1")
+          .selectAll("text")
+          .data(dataSet);
+          selection_text.enter().append("text");
+          selection_text.exit().remove();  
+        console.log(selection);      
+        
+    }
     
+    function render(){
+  
+        d3.select("#svg1").selectAll("text").attr({
+            "x":15,
+            "y":function(d,i){
+                return 25+20*i;
+            }
+        }).text(function(d){
+            return d.industry;
+        });
+        
+        
+        d3.select("#svg1").selectAll("rect").attr({
+            x: 300,
+            y: function(d,i){
+                return 10+20*i;
+                },
+            width: function(d,i){
+                return xScale(d.amount);
+            },
+            height: 18,
+            fill: "red"
+        });
     
-    
-    
+     }    
+ 
 </script>
 
 <hr>
+
+<div id="hwt02">2.將[85,60,99,49,77,82,97]中數字小於70改紅色</div>
+<div id="hsvg2"></div> 
+<script>
+    var arr2=[85,60,99,49,77,82,97]; 
+    bind_num(arr2);
+    render_num();
+    
+    function bind_num(dataSet){
+        
+        var selection=d3.select("#hsvg2")
+        .selectAll("div")
+        .data(dataSet);
+        
+        selection.enter().append("div");
+        selection.exit().remove();
+        
+        
+    }
+ 
+    function render_num(){
+        d3.selectAll("#hsvg2>div").text(function(d,i){
+            return (i+1)+":"+d;
+        })
+        .style({
+          color:function(d){
+              if(d<70){
+                return "red";
+                }else{
+                 return "black";   
+              }
+          }  
+        });
+        
+    }
+</script>
+<div id="hwt03">3.按鈕新增與移除</div>
+<div id="hsvg3"></div> 
+      
+    <script>
+        var arr_svg3 = [85, 60, 99, 49, 77, 82, 60, 77, 88];
+        var w = 800, h=400, p=100;
+        
+        
+        
+        hsvg3();
+        bind_svg3();
+        render_svg3();
+    
+        //console.log(d3.selectAll("div") );
+        
+        
+        function hsvg3(){
+            d3.select("#hsvg3").append("svg").attr({
+                width: w,
+                height: h 
+            });
+        }
+        
+        function bind_svg3(){   
+            //rect-----------------------
+            var selection = d3.select("#hsvg3 svg")
+                             .selectAll("rect")
+                             .data(arr_svg3);
+            selection.enter()
+                    .append("rect");
+            
+            selection.exit().remove();
+            
+            //text-----------------------
+            
+            var selection_text = d3.select("#hsvg3 svg")
+                             .selectAll("text")
+                             .data(arr_svg3);
+            
+            selection_text.enter()
+                    .append("text");
+            
+            selection_text.exit().remove();
+            
+        }      
+        function render_svg3(){
+            
+            d3.select("#hsvg3 svg").selectAll("rect")
+              .attr({
+                x: function(d,i){
+                    return p+(40+2)*i
+                },
+                y: function(d,i){
+                    return h-p-d;
+                },
+                width: 40,
+                height: function(d,i){
+                    return d;
+                },
+                fill: function(d,i){
+                    if(d<70){
+                        return "red";
+                    }
+                    else{
+                        return "lightgreen";
+                    }
+                    
+                }
+            });
+            d3.select("#hsvg3 svg").selectAll("text")
+              .attr({
+                x: function(d,i){
+                    return p+(40+2)*i+10
+                },
+                y: function(d,i){
+                    return h-p+20;
+                }
+                
+            }).text(function(d){
+                return d;
+            })
+            
+        }
+        var random = function(N,M){
+    
+            //return Math.floor(Math.random()*(M-N+1) + N);
+            
+            var rScale = d3.scale.linear()
+                .domain([0, 1])
+                .rangeRound([N, M]);
+                return rScale(Math.random());  
+            
+            
+        }
+        
+        function update(){
+            var num = random(10,100);
+            arr_svg3.push(num);
+            bind_svg3();
+            render_svg3();
+        }
+        function update_remove(){
+            arr_svg3.shift();
+            bind_svg3();
+            render_svg3();
+        }
+        
+    </script>
+    
+    <input type="button" value="新增" onclick="update()">
+    
+    <input type="button" value="移除" onclick="update_remove()">
+ 
+
+<hr>
+<div id="hwt04">4.試著用ordinal()秀出各政黨顏色</div>
+<div id="hsvg4"></div> 
+<script>
+var index=["中國國民黨", "民主進步黨", "時代力量", "無黨團結聯盟", "親民黨"];
+var color=["blue","green","yellow","gray","orange"];
+var xScale = d3.scale.ordinal()
+      .domain(index)
+      .range(color);
+
+console.log(xScale("無黨團結聯盟"));    
+</script>
+
+
 
 </body>
 </html>
